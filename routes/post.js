@@ -2,8 +2,7 @@ const { Router } = require("express");
 const { param, validationResult } = require("express-validator");
 const passport = require("passport");
 
-const userController = require("../controllers/userController");
-const multer = require("multer");
+const postController = require("../controllers/postController");
 
 const router = Router();
 
@@ -21,20 +20,18 @@ const sendValidationResults = (req, res, next) => {
 
 router.use(
   "/:id",
-  param("id").isNumeric().withMessage("User Id should be a number"),
+  param("id").isNumeric().withMessage("Post Id should be a number"),
   sendValidationResults
 );
 
-router.get("/:id", userController.getUser);
+router.get("/:id", postController.getPost);
 
-router.patch("/:id", userController.updateUser);
+router.post("/", postController.createPost);
 
-router.delete("/:id", userController.deleteUser);
+router.patch("/:id", postController.updatePost);
 
-router.get("{contact&search=true}", userController.searchUser);
+router.delete("/:id", postController.deletePost);
 
-router.get("{conversation_id&auth_id}", userController.getChatUser);
-
-router.get("/", userController.getUsers);
+router.get("/", postController.getPosts);
 
 module.exports = router;

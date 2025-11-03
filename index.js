@@ -3,7 +3,6 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 
-const passport = require("passport");
 const session = require("express-session");
 const { PrismaSessionStore } = require("@quixo3/prisma-session-store");
 
@@ -13,7 +12,6 @@ const databaseUrl =
     ? process.env.NEON_URL
     : process.env.DATABASE_URL;
 
-const models = require("./models/index");
 const routes = require("./routes/index");
 const authRoutes = require("./routes/auth");
 
@@ -52,24 +50,18 @@ app.use(
   })
 );
 
-// app.use(passport.session());
-
-app.use((req, res, next) => {
-  req.context = {
-    models,
-    me: models.users[1],
-  };
-  next();
-});
-
 app.use("/session", routes.session);
-app.use("/users", routes.user);
-app.use("/auth", authRoutes);
-app.use("/conversations", routes.conversation);
-app.use("/messages", routes.message);
-app.use("/chatmembers", routes.chatMember);
-app.use("/friendrequests", routes.friendRequest);
-app.use("/friends", routes.friend);
+app.use("/api/users", routes.user);
+app.use("/api/posts", routes.post);
+app.use("/api/auth", authRoutes);
+app.use("/api/conversations", routes.conversation);
+app.use("/api/messages", routes.message);
+app.use("/api/chatmembers", routes.chatMember);
+app.use("/api/friendrequests", routes.friendRequest);
+app.use("/api/friends", routes.friend);
+app.use("/api/comments", routes.comment);
+app.use("/api/likes", routes.like);
+app.use("/api/followRequest", routes.followRequest);
 
 app.use((err, req, res, next) => {
   console.log(err);
