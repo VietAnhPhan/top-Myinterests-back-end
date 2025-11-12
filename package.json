@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "NODE_ENV=development node --watch index.js",
-    "build":"NODE_ENV=production node --watch index.js"
+    "build": "NODE_ENV=production node --watch index.js"
   },
   "keywords": [],
   "author": "",
@@ -29,6 +29,8 @@
     "uuid": "^13.0.0"
   },
   "devDependencies": {
+    "@faker-js/faker": "^10.1.0",
     "prisma": "^6.16.1"
-  }
+  },
+  "type": "commonjs"
 }

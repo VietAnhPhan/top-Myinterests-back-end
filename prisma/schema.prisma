@@ -16,13 +16,14 @@ datasource db {
 
 model User {
   id           Int             @id @default(autoincrement())
-  name         String
+  fullname     String
   username     String          @unique
   email        String          @unique
   password     String
-  isAdmin      Boolean         @default(false)
   about        String?         @default("Hi, I am using Messaging App!")
-  phone        String?         @unique
+  bio          String?
+  birthdate    DateTime?
+  phone        String?
   Messages     Message[]
   Participant  Participant[]
   avatarPath   String?
@@ -38,7 +39,7 @@ model User {
   Comment      Comment[]
   Like         Like[]
   isActive     Boolean         @default(true)
-  createdAt    DateTime        @default(now())
+  registeredAt DateTime        @default(now())
 }
 
 model Session {

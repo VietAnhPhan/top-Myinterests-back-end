@@ -5,6 +5,10 @@ const conversation = require("./conversation");
 const chatMember = require("./chatMember");
 const friendRequest = require("./friendRequest");
 const friend = require("./friend");
+const post = require("./post");
+const like = require("./like");
+const comment = require("./comment");
+const followRequest = require("./followRequest");
 
 module.exports = {
   session,
@@ -14,4 +18,8 @@ module.exports = {
   chatMember,
   friendRequest,
   friend,
+  post,
+  like,
+  comment,
+  followRequest,
 };

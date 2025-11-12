@@ -12,22 +12,21 @@ async function getUser(req, res) {
   return res.json(user);
 }
 
-async function searchUser(req, res, next) {
+async function searchUsers(req, res, next) {
   if (
-    req.query.contact &&
-    req.query.contact != "" &&
+   
     req.query.search &&
-    req.query.search == "true"
+    req.query.search != ""
   ) {
     const User = await prisma.user.findMany({
       where: {
         OR: [
           {
-            username: { startsWith: req.query.contact, mode: "insensitive" },
+            username: { contains: req.query.search, mode: "insensitive" },
           },
           {
-            name: {
-              contains: req.query.contact.toLowerCase(),
+            fullname: {
+              contains: req.query.search.toLowerCase(),
               mode: "insensitive",
             },
           },
@@ -38,15 +37,15 @@ async function searchUser(req, res, next) {
     return res.json(User);
   }
 
-  if (req.query.username && req.query.username != "") {
-    const User = await prisma.user.findFirst({
-      where: {
-        username: req.query.username,
-        isActive: true,
-      },
-    });
-    return res.json(User);
-  }
+  // if (req.query.username && req.query.username != "") {
+  //   const User = await prisma.user.findFirst({
+  //     where: {
+  //       username: req.query.username,
+  //       isActive: true,
+  //     },
+  //   });
+  //   return res.json(User);
+  // }
   next();
 }
 
@@ -79,14 +78,14 @@ async function getChatUser(req, res, next) {
   }
 }
 
-async function getAll(req, res) {
+async function getUsers(req, res) {
   const users = await prisma.user.findMany({
     where: {
       isActive: true,
     },
-    orderBy: {
-      created_at: "desc",
-    },
+    // orderBy: {
+    //   created_at: "desc",
+    // },
   });
 
   return res.json(users);
@@ -131,8 +130,6 @@ async function updateUser(req, res, next) {
         user.password = hashedPassword;
       } else if (value === "") {
         continue;
-      } else if (key === "uploaded_avatar") {
-        continue;
       } else {
         user[key] = value;
       }
@@ -145,7 +142,7 @@ async function updateUser(req, res, next) {
       data: user,
     });
 
-    return res.json({ user });
+    return res.json(user);
   } catch (err) {
     next(err);
   }
@@ -191,15 +188,13 @@ async function deleteUser(req, res, next) {
     },
   });
 
-  return res.json({
-    user,
-  });
+  return res.json(user);
 }
 
 module.exports = {
-  getAll,
+  getUsers,
   getUser,
-  searchUser,
+  searchUsers,
   createUser,
   updateUser,
   deleteUser,

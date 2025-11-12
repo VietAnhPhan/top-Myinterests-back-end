@@ -79,7 +79,15 @@ router.post("/login", (req, res, next) => {
         user: user,
       });
     }
-    const token = jwt.sign(user, "jwt_secret");
+
+    const userData = {
+      uuid: user.uuid,
+      fullname: user.fullname,
+      registeredAt: user.registeredAt,
+    };
+
+    const token = jwt.sign(userData, process.env.SECRET_KEY);
+
     return res.json({ username: user.username, token });
   })(req, res);
 });
@@ -101,7 +109,7 @@ router.put(
     .withMessage("Repeat password must match"),
   (req, res, next) => {
     const errors = validationResult(req);
-    
+
     if (errors.array().length > 0) {
       return res.json({
         title: "Fail to update password",
