@@ -26,6 +26,8 @@ router.use(
 
 router.get("/:id", postController.getPost);
 
+router.get("{search}", postController.searchPosts);
+
 router.post("/", postController.createPost);
 
 router.patch("/:id", postController.updatePost);

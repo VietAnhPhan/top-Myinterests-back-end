@@ -31,7 +31,7 @@ router.patch("/:id", userController.updateUser);
 
 router.delete("/:id", userController.deleteUser);
 
-router.get("{contact&search=true}", userController.searchUser);
+router.get("{search}", userController.searchUsers);
 
 router.get("{conversation_id&auth_id}", userController.getChatUser);
 

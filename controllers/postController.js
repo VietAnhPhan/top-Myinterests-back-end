@@ -11,9 +11,24 @@ async function getPost(req, res) {
 }
 
 async function getPosts(req, res) {
-  const posts = await prisma.user.findMany({
+  const posts = await prisma.post.findMany({
     where: {
       isActive: true,
+    },
+    include: {
+      author: {
+        select: {
+          username: true,
+          fullname: true,
+          avatarPath: true,
+        },
+      },
+      _count: {
+        select: {
+          Like: true,
+          Comment: true,
+        },
+      },
     },
     // orderBy: {
     //   created_at: "desc",
@@ -80,10 +95,42 @@ async function deletePost(req, res, next) {
   });
 }
 
+async function searchPosts(req, res, next) {
+  if (req.query.search && req.query.search != "") {
+    const Posts = await prisma.post.findMany({
+      where: {
+        OR: [
+          {
+            body: { contains: req.query.search, mode: "insensitive" },
+          },
+        ],
+        isActive: true,
+      },
+      include: {
+        author: {
+          select: {
+            fullname: true,
+            username: true,
+          },
+        },
+        _count: {
+          select: {
+            Like: true,
+            Comment: true,
+          },
+        },
+      },
+    });
+    return res.json(Posts);
+  }
+  next();
+}
+
 module.exports = {
   getPost,
   getPosts,
   createPost,
   updatePost,
   deletePost,
+  searchPosts,
 };

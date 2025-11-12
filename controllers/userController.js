@@ -12,22 +12,21 @@ async function getUser(req, res) {
   return res.json(user);
 }
 
-async function searchUser(req, res, next) {
+async function searchUsers(req, res, next) {
   if (
-    req.query.contact &&
-    req.query.contact != "" &&
+   
     req.query.search &&
-    req.query.search == "true"
+    req.query.search != ""
   ) {
     const User = await prisma.user.findMany({
       where: {
         OR: [
           {
-            username: { startsWith: req.query.contact, mode: "insensitive" },
+            username: { contains: req.query.search, mode: "insensitive" },
           },
           {
             fullname: {
-              contains: req.query.contact.toLowerCase(),
+              contains: req.query.search.toLowerCase(),
               mode: "insensitive",
             },
           },
@@ -38,15 +37,15 @@ async function searchUser(req, res, next) {
     return res.json(User);
   }
 
-  if (req.query.username && req.query.username != "") {
-    const User = await prisma.user.findFirst({
-      where: {
-        username: req.query.username,
-        isActive: true,
-      },
-    });
-    return res.json(User);
-  }
+  // if (req.query.username && req.query.username != "") {
+  //   const User = await prisma.user.findFirst({
+  //     where: {
+  //       username: req.query.username,
+  //       isActive: true,
+  //     },
+  //   });
+  //   return res.json(User);
+  // }
   next();
 }
 
@@ -195,7 +194,7 @@ async function deleteUser(req, res, next) {
 module.exports = {
   getUsers,
   getUser,
-  searchUser,
+  searchUsers,
   createUser,
   updateUser,
   deleteUser,
