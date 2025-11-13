@@ -18,6 +18,8 @@ const sendValidationResults = (req, res, next) => {
   next();
 };
 
+router.get("/users/:username", postController.getPostsByUsername);
+
 router.use(
   "/:id",
   param("id").isNumeric().withMessage("Post Id should be a number"),

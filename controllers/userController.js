@@ -12,6 +12,20 @@ async function getUser(req, res) {
   return res.json(user);
 }
 
+async function getUserByUsername(req, res, next) {
+  if (!req.query.username) {
+    return next();
+  }
+
+  const user = await prisma.user.findFirst({
+    where: {
+      username: req.query.username,
+    },
+  });
+
+  return res.json(user);
+}
+
 async function searchUsers(req, res, next) {
   if (req.query.search && req.query.search !== "") {
     const User = await prisma.user.findMany({
@@ -42,14 +56,14 @@ async function searchUsers(req, res, next) {
   //   });
   //   return res.json(User);
   // }
-  next();
+  return next();
 }
 
 async function getChatUser(req, res, next) {
   let conversationId = req.query.conversation_id;
   let userId = req.query.auth_id;
   if (!conversationId || conversationId === "" || !userId || userId === "") {
-    next();
+    return next();
   } else {
     const conversation = await prisma.conversation.findFirst({
       where: {
@@ -88,21 +102,22 @@ async function getUsers(req, res) {
 }
 
 async function getUsersByHighestFollowers(req, res, next) {
-  if (req.query.top_users && req.query.top_users == "true") {
-    const users = await prisma.user.findMany({
-      where: {
-        isActive: true,
-      },
-      orderBy: {
-        follower: {
-          _count: "desc",
-        },
-      },
-    });
-
-    return res.json(users);
+  if (!req.query.top_users) {
+    return next();
   }
-  next();
+
+  const users = await prisma.user.findMany({
+    where: {
+      isActive: true,
+    },
+    orderBy: {
+      follower: {
+        _count: "desc",
+      },
+    },
+  });
+
+  return res.json(users);
 }
 
 async function createUser(req, res, next) {
@@ -215,4 +230,5 @@ module.exports = {
   resetPassword,
   getChatUser,
   getUsersByHighestFollowers,
+  getUserByUsername,
 };

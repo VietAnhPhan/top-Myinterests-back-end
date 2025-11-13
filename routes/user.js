@@ -27,6 +27,9 @@ router.use(
 
 router.get("/:id", userController.getUser);
 
+router.get("{username}", userController.getUserByUsername);
+
+
 router.patch("/:id", userController.updateUser);
 
 router.delete("/:id", userController.deleteUser);
