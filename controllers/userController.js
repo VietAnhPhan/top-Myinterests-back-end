@@ -110,6 +110,14 @@ async function getUsersByHighestFollowers(req, res, next) {
     where: {
       isActive: true,
     },
+    include: {
+      followee: {
+        where: {
+          followerId: req.user.id,
+          status: "friends",
+        },
+      },
+    },
     orderBy: {
       follower: {
         _count: "desc",

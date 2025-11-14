@@ -28,8 +28,8 @@ router.post("/", followRequestController.createFollowRequest);
 router.delete("/:id", followRequestController.deleteFollowRequest);
 
 router.get(
-  "/users/:id{followers=true}",
-  followRequestController.getFollowersByUserId
+  "/users/:id{follower=true}",
+  followRequestController.getFollowingRequest
 );
 
 router.get(

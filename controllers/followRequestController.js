@@ -1,24 +1,21 @@
 const { prisma } = require("../config/helpers");
 
-async function getFollowersByUserId(req, res, next) {
-  const isFollowers = req.query.followers;
+async function getFollowingRequest(req, res, next) {
+  const isFollower = req.query.follower;
 
-  if (!isFollowers) {
-    next();
+  if (!isFollower) {
+    return next();
   }
 
-  const userId = Number(req.params.id);
-  const Followers = await prisma.followRequest.findMany({
+  const followeeId = Number(req.params.id);
+  const followingRequest = await prisma.followRequest.findFirst({
     where: {
       isActive: true,
-      followeeId: userId,
-    },
-    select: {
-      follower: true,
+      followeeId: followeeId,
     },
   });
 
-  return res.json(Followers);
+  return res.json(followingRequest);
 }
 
 async function getFollowingsByUserId(req, res) {
@@ -27,7 +24,7 @@ async function getFollowingsByUserId(req, res) {
   if (!isFollowing) {
     res.json();
   }
-  
+
   const userId = Number(req.params.id);
   const Following = await prisma.followRequest.findMany({
     where: {
@@ -57,15 +54,7 @@ async function createFollowRequest(req, res, next) {
     });
 
     if (oldFollowRequest) {
-      const followRequest = await prisma.followRequest.update({
-        where: {
-          id: oldFollowRequest.id,
-        },
-        data: {
-          isActive: true,
-        },
-      });
-      return res.json(followRequest);
+      return res.json(oldFollowRequest);
     }
 
     const FollowRequest = await prisma.followRequest.create({
@@ -99,7 +88,7 @@ async function deleteFollowRequest(req, res, next) {
 }
 
 module.exports = {
-  getFollowersByUserId,
+  getFollowingRequest,
   getFollowingsByUserId,
   createFollowRequest,
   deleteFollowRequest,

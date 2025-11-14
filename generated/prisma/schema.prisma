@@ -40,6 +40,8 @@ model User {
   Like         Like[]
   isActive     Boolean         @default(true)
   registeredAt DateTime        @default(now())
+  CurrentUser  Notification[]  @relation("CurrentUser")
+  OtherUser    Notification[]  @relation("OtherUser")
 }
 
 model Session {
@@ -206,4 +208,21 @@ model Like {
   audienceId Int
   isActive   Boolean  @default(true)
   createdAt  DateTime @default(now())
+}
+
+model Notification {
+  id            Int              @id @default(autoincrement())
+  CurrentUser   User             @relation("CurrentUser", fields: [currentUserId], references: [id])
+  currentUserId Int
+  OtherUser     User             @relation("OtherUser", fields: [otherUserId], references: [id])
+  otherUserId   Int
+  type          notificationType
+  isActive      Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+}
+
+enum notificationType {
+  follow
+  comment
+  like
 }
