@@ -109,14 +109,12 @@ async function getUsersByHighestFollowers(req, res, next) {
   const users = await prisma.user.findMany({
     where: {
       isActive: true,
+      NOT: {
+        id: req.user.id,
+      },
     },
     include: {
-      followee: {
-        where: {
-          followerId: req.user.id,
-          status: "friends",
-        },
-      },
+      followee: true,
     },
     orderBy: {
       follower: {
